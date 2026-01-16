@@ -1,12 +1,7 @@
 #!/usr/bin/env python3
 """
-Production-Ready Load Generator for Sync vs Async API Performance Testing
+Load Generator for Sync vs Async API Performance Testing
 
-Compatible with production security features including:
-- Rate limiting bypass for testing
-- SSRF protection awareness  
-- Enhanced input validation
-- Environment-aware configuration
 """
 
 import asyncio
@@ -697,4 +692,5 @@ def run_load_test(url: str, requests: int, concurrency: int, sync_ratio: float,
 
 
 if __name__ == '__main__':
+
     run_load_test()
