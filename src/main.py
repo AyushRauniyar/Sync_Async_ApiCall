@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 # Rate limiting configuration
 class RateLimiter:
-    """Production-grade rate limiter with sliding window"""
+    """Rate limiter with sliding window"""
     
     def __init__(self, max_requests: int = 100, window_seconds: int = 60):
         self.max_requests = max_requests
@@ -115,16 +115,9 @@ async def validation_exception_handler(request: Request, exc: HTTPException):
 
 # App initialization
 app = FastAPI(
-    title="Sync vs Async API Demo - Production Ready",
+    title="Sync vs Async API Demo",
     description="""
-    Production-ready demonstration of synchronous and asynchronous API patterns under load.
-    
-    Features:
-    - Rate limiting to prevent abuse
-    - Enhanced input validation with security checks
-    - Circuit breaker pattern for external callbacks
-    - Comprehensive error handling and monitoring
-    - Security measures against SSRF and injection attacks
+    Demonstration of synchronous and asynchronous API patterns under load.
     """,
     version="2.0.0"
 )
@@ -530,4 +523,5 @@ async def test_callback(payload: dict):
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
