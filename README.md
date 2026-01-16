@@ -1,4 +1,4 @@
-# 🚀 Production-Ready Sync vs Async API
+# 🚀 Sync vs Async API
 
 A comprehensive demonstration of **synchronous vs asynchronous API patterns** under load, built with enterprise-grade security, reliability, and monitoring features.
 
@@ -621,5 +621,6 @@ This implementation prioritizes **clarity** and **demonstrability** over product
 3. **Comprehensive security** measures
 4. **Advanced monitoring** and alerting
 5. **Container orchestration** for deployment
+
 
 The current design effectively demonstrates the sync vs async patterns while maintaining code readability and ease of local development.
