@@ -96,6 +96,15 @@ curl -X POST http://localhost:8000/async \
     "callback_url": "https://httpbin.org/post"
   }'
 
+# Get all requests (shows processing history)
+curl http://localhost:8000/requests
+
+# Get requests with pagination
+curl "http://localhost:8000/requests?limit=5&offset=0"
+
+# Get specific request details (use request_id from above responses)
+curl http://localhost:8000/requests/{request_id}
+
 # Check system statistics
 curl http://localhost:8000/stats
 
@@ -391,61 +400,6 @@ rm requests.db
 ```
 
 ---
-
-## 🚀 Production Deployment
-
-### **Environment Variables**
-```bash
-# Development/Demo Mode (default)
-ENVIRONMENT=development             # Disables rate limiting, uses in-memory DB
-
-# Production Mode
-ENVIRONMENT=production              # Enables strict security
-DATABASE_URL=sqlite:///./app.db     # File-based SQLite for production
-# DATABASE_URL=postgresql://...      # Or migrate to PostgreSQL for scale
-LOG_LEVEL=INFO                     # Logging configuration
-RATE_LIMIT_ENABLED=true            # Enable rate limiting
-```
-
-### **Docker Deployment**
-```dockerfile
-FROM python:3.11-slim
-
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY src/ ./src/
-COPY load_generator/ ./load_generator/
-
-EXPOSE 8000
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-### **Scaling Considerations**
-- **Horizontal Scaling**: Stateless design supports load balancing
-- **Database**: Migrate to PostgreSQL for production workloads
-- **Monitoring**: Integrate with Prometheus/Grafana for metrics
-- **Logging**: Use structured logging with ELK stack
-
----
-
-## 📚 Documentation
-
-### **Comprehensive Guides**
-- **[PRODUCTION_SECURITY.md](./PRODUCTION_SECURITY.md)** - Complete security implementation guide
-- **[LOAD_TESTING_GUIDE.md](./LOAD_TESTING_GUIDE.md)** - Dual-mode load testing documentation  
-- **[API_ENDPOINTS.md](./API_ENDPOINTS.md)** - Detailed API reference
-- **[PRODUCTION_IMPLEMENTATION_SUMMARY.md](./PRODUCTION_IMPLEMENTATION_SUMMARY.md)** - Implementation overview
-
-### **Security Testing**
-- **Automated security validation** with comprehensive test suite
-- **SSRF protection testing** against common attack vectors
-- **Rate limiting validation** with abuse simulation
-- **Input validation testing** against injection attacks
-
----
-
 ## 🤝 Contributing
 
 ### **Development Setup**
@@ -473,38 +427,8 @@ python -m uvicorn src.main:app --reload
 
 ---
 
-## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙋‍♂️ Support & Questions
-
-For questions about:
-- **Implementation details**: Check the comprehensive documentation in `/docs`
-- **Security features**: See [PRODUCTION_SECURITY.md](./PRODUCTION_SECURITY.md)
-- **Load testing**: See [LOAD_TESTING_GUIDE.md](./LOAD_TESTING_GUIDE.md)
-- **Performance issues**: Run the demo mode load test for debugging
-
----
-
-**Built with ❤️ for demonstrating production-ready async API patterns**
-
-*This project showcases enterprise-grade thinking applied to API design, security, and operational excellence.*
-- **Historical data** for analysis and debugging
-
-### 🚀 Scaling & Performance
-- **Async processing** using FastAPI background tasks
-- **Concurrent request handling** without blocking
-- **Database connection pooling** for efficiency
-- **Graceful error handling** under high load
-
-### 🔍 Load Testing & Metrics
-- **Comprehensive load generator** with configurable parameters
-- **Latency statistics** (p50, p95, p99) for sync endpoints
-- **Callback timing analysis** for async endpoints
-- **Success rate tracking** and error analysis
+**Built with ❤️ for demonstrating difference between async/sync API patterns**
 
 ## Load Generator Usage
 
@@ -572,55 +496,3 @@ python load_generator/load_test.py \
 - **Latency percentiles** (p50, p95, p99)
 - **Callback delivery rates** and timing
 - **Error categorization** and frequency
-
-## Production Considerations
-
-### Scaling Improvements
-1. **Database**: PostgreSQL with connection pooling
-2. **Message Queue**: Redis + Celery for background tasks
-3. **Load Balancing**: Multiple API instances behind nginx
-4. **Monitoring**: Prometheus metrics + Grafana dashboards
-
-### Security Enhancements
-1. **Input validation**: Stricter data validation and sanitization
-2. **Rate limiting**: Per-client request throttling
-3. **Callback security**: URL whitelist, HTTPS enforcement, signature validation
-4. **Authentication**: API key or JWT-based auth
-
-### Reliability Features
-1. **Circuit breaker** for callback failures
-2. **Dead letter queue** for failed async requests
-3. **Health checks** with dependency monitoring
-4. **Graceful shutdown** handling
-
-## Project Structure
-
-```
-sync-async-api/
-├── src/
-│   ├── main.py              # FastAPI application
-│   ├── models.py            # Pydantic models
-│   ├── database.py          # SQLAlchemy setup
-│   ├── services.py          # Business logic services
-│   └── work_processor.py    # Shared work logic
-├── load_generator/
-│   └── load_test.py         # Load testing tool
-├── tests/
-│   └── (test files)
-├── test_api.py              # Simple API tests
-├── requirements.txt         # Dependencies
-└── README.md               # This file
-```
-
-## Development Notes
-
-This implementation prioritizes **clarity** and **demonstrability** over production-scale optimizations. Key areas where real-world systems would differ:
-
-1. **Message queuing** instead of in-memory background tasks
-2. **Distributed database** instead of SQLite
-3. **Comprehensive security** measures
-4. **Advanced monitoring** and alerting
-5. **Container orchestration** for deployment
-
-
-The current design effectively demonstrates the sync vs async patterns while maintaining code readability and ease of local development.
